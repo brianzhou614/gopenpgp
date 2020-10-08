@@ -39,7 +39,7 @@ IOSSIM_OUT=${OUTPUT_PATH}/"iOS_Simulator"
 IOSSIM_OUT_FILE_NAME="Crypto"
 IOSSIM_OUT_FILE=${IOSSIM_OUT}/${IOSSIM_OUT_FILE_NAME}.framework
 
-mkdir -p $ANDROID_OUT
+# mkdir -p $ANDROID_OUT
 mkdir -p $IOS_OUT
 mkdir -p $macOS_OUT
 mkdir -p $macOSUI_OUT
@@ -127,12 +127,13 @@ printf "\e[0;32mInstalling frameworks. \033[0m\n\n"
 
 printf "\e[0;32mAll Done. \033[0m\n\n"
 
-cp -rL $IOS_AND_SIM_OUT_FILE $IOS_OUT_FILE;
-cp -rL $IOS_AND_SIM_OUT_FILE $IOSSIM_OUT_FILE;
+rm -rf $IOS_OUT_FILE $IOSSIM_OUT_FILE;
+cp -R $IOS_AND_SIM_OUT_FILE $IOS_OUT_FILE;
+cp -R $IOS_AND_SIM_OUT_FILE $IOSSIM_OUT_FILE;
 
 lipo $IOSSIM_OUT_FILE/Versions/A/Crypto -remove arm64 -output $IOSSIM_OUT_FILE/Versions/A/Crypto;
 lipo $IOS_OUT_FILE/Versions/A/Crypto -remove x86_64 -output $IOS_OUT_FILE/Versions/A/Crypto;
 
 XCFRAMEWORK_OUT_FILE=$OUTPUT_PATH/Crypto.xcframework
 xcodebuild -create-xcframework  -framework $IOS_OUT_FILE  -framework $macOS_OUT_FILE -framework $macOSUI_OUT_FILE -framework $IOSSIM_OUT_FILE  -output $XCFRAMEWORK_OUT_FILE;
-zip -r $XCFRAMEWORK_OUT_FILE.zip $XCFRAMEWORK_OUT_FILE;
+zip -r $OUTPUT_PATH/build.zip $OUTPUT_PATH -x $OUTPUT_PATH/build.zip;
